@@ -4,6 +4,63 @@ Transform:
   
 Description: Bank
 Resources: 
+  CompaniesBucket:
+    Type: AWS::S3::Bucket
+    Properties: 
+      BucketName: !Ref 'arn:aws:s3:::my-bucket-proyect-ale'
+      AccessControl: PublicReadWrite
+      
+  CompaniesBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref CompaniesBucket
+      Policies:
+        - PolicyName: LambdaRolePolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+              - s3:DeleteObject
+              - s3:GetObject
+              - s3:PutObject
+            Resource: !Join['', ['arn:aws:s3:::', !Ref CompaniesBucket, /*]]
+      
+      
+  
+  
+    
+    CompanyRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: companies_role
+      ManagedPolicyArns: 
+        - 'arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess'
+        - 'arn:aws:s3:policy/AmazonS3FullAccess'
+        - 'arn:aws:iam::aws:policy/AWSOpsWorksCloudWatchLogs'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: "/"
+      Policies:
+      - PolicyName: lambda-policy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - s3:PutObject
+            - s3:GetObject
+            - s3:DeleteObject
+            Resource: arn:aws:logs:*:*:*
+            
+            
 
   GetAccountInformation:
     Type: AWS::Serverless::Function
@@ -15,9 +72,11 @@ Resources:
       Handler: bank.getAccountInformation
       Runtime: python3.6
       CodeUri: package/
-      Policies: 
+      Policies:
+        
         - DynamoDBReadPolicy:
             TableName: !Ref BankTable  
+      
       Events: 
         GetAccount: 
           Type: Api
@@ -54,12 +113,16 @@ Resources:
       Environment:
         Variables: 
           COMPANIES_TABLE: !Ref CompaniesTable
+          COMPANIES_BUCKET: !Ref my-bucket-proyect-ale
       Handler: bank.getIfCompanyIsVerified
       Runtime: python3.6
       CodeUri: package/
+      
+      Role: !GetAtt CompanyRole.Arn
       Policies: 
         - DynamoDBReadPolicy:
             TableName: !Ref CompaniesTable  
+       
       Events: 
         GetAccount: 
           Type: Api
@@ -133,7 +196,7 @@ Resources:
   MyAPI:
     Type: AWS::Serverless::Api
     Properties:
-      Name: my-ultimate-bank-api
+      Name: bank-api
       StageName: prod
       DefinitionBody:
         Fn::Transform:
@@ -164,7 +227,7 @@ Resources:
   CompaniesTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: companies-table
+      TableName: company_table
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
@@ -172,11 +235,8 @@ Resources:
       KeySchema:
         - AttributeName: "pk"
           KeyType: HASH
-        - AttributeName: "sk"
-          KeyType: RANGE
+
       
       AttributeDefinitions:
         - AttributeName:  "pk"
           AttributeType: S
-        - AttributeName: "sk"
-          AttributeType: S  

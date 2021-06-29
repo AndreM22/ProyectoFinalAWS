@@ -38,6 +38,9 @@ paths:
                   type: string
                 monthly_salary:
                   type: string
+                daily_transactions:
+                  type: number
+                  
       x-amazon-apigateway-integration:
         type: "aws_proxy"
         uri:
@@ -122,7 +125,7 @@ paths:
             schema:
               type: object
               properties:
-                senser: 
+                sender: 
                   type: string
                 receiver: 
                   type: string
