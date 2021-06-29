@@ -1,0 +1,210 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform:
+- AWS::Serverless-2016-10-31
+Description: Bank
+Resources:
+  CompaniesBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName:
+        Ref: arn:aws:s3:::my-bucket-proyect-ale
+      AccessControl: PublicReadWrite
+  CompaniesBucketPolicy:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: companies_role
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
+      - arn:aws:s3:policy/AmazonS3FullAccess
+      - arn:aws:iam::aws:policy/AWSOpsWorksCloudWatchLogs
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: /
+      Policies:
+      - PolicyName: lambda-policy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - s3:PutObject
+            - s3:GetObject
+            - s3:DeleteObject
+            Resource: arn:aws:logs:*:*:*
+    CompanyRole: null
+  GetAccountInformation:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: getAccountInformation
+      Environment:
+        Variables:
+          BANK_TABLE:
+            Ref: BankTable
+      Handler: bank.getAccountInformation
+      Runtime: python3.6
+      CodeUri: s3://bank-bucket-client/b43f5c12d076ef47432570f73bf7444c
+      Policies:
+      - DynamoDBReadPolicy:
+          TableName:
+            Ref: BankTable
+      Events:
+        GetAccount:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: MyAPI
+            Path: /account/{account_id}
+            Method: GET
+  PutAccountInformation:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: putAccountInformation
+      Environment:
+        Variables:
+          BANK_TABLE:
+            Ref: BankTable
+      Handler: bank.putAccountInformation
+      Runtime: python3.6
+      CodeUri: s3://bank-bucket-client/b43f5c12d076ef47432570f73bf7444c
+      Policies:
+      - DynamoDBWritePolicy:
+          TableName:
+            Ref: BankTable
+      Events:
+        PutAccount:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: MyAPI
+            Path: /account/{account_id}
+            Method: PUT
+  GetIfCompanyIsVerified:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: getIfCompanyIsVerified
+      Environment:
+        Variables:
+          COMPANIES_TABLE:
+            Ref: CompaniesTable
+          COMPANIES_BUCKET:
+            Ref: my-bucket-proyect-ale
+      Handler: bank.getIfCompanyIsVerified
+      Runtime: python3.6
+      CodeUri: s3://bank-bucket-client/b43f5c12d076ef47432570f73bf7444c
+      Role:
+        Fn::GetAtt:
+        - CompanyRole
+        - Arn
+      Policies:
+      - DynamoDBReadPolicy:
+          TableName:
+            Ref: CompaniesTable
+      Events:
+        GetAccount:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: MyAPI
+            Path: /company/{company_id}
+            Method: GET
+  GetTransactionInformation:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: getTransactionInformation
+      Environment:
+        Variables:
+          BANK_TABLE:
+            Ref: BankTable
+      Handler: bank.getTransactionInformation
+      Runtime: python3.6
+      CodeUri: s3://bank-bucket-client/b43f5c12d076ef47432570f73bf7444c
+      Role:
+        Fn::GetAtt:
+        - TransactionsRole
+        - Arn
+      Policies:
+      - DynamoDBReadPolicy:
+          TableName:
+            Ref: BankTable
+      Events:
+        GetAccount:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: MyAPI
+            Path: transaction/{transaction-id}
+            Method: GET
+  PutTransactionInformation:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: putTransactionInformation
+      Environment:
+        Variables:
+          BANK_TABLE:
+            Ref: BankTable
+      Handler: bank.putTransactionInformation
+      Runtime: python3.6
+      CodeUri: s3://bank-bucket-client/b43f5c12d076ef47432570f73bf7444c
+      Role:
+        Fn::GetAtt:
+        - TransactionsRole
+        - Arn
+      Policies:
+      - DynamoDBWritePolicy:
+          TableName:
+            Ref: BankTable
+      Events:
+        PutAccount:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: MyAPI
+            Path: transaction/{transaction-id}
+            Method: PUT
+  MyAPI:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: bank-api
+      StageName: prod
+      DefinitionBody:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location: s3://bank-bucket-client/06075c394ffdb6282b2b535d6f177847
+  BankTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: bank-table
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      KeySchema:
+      - AttributeName: pk
+        KeyType: HASH
+      - AttributeName: sk
+        KeyType: RANGE
+      AttributeDefinitions:
+      - AttributeName: pk
+        AttributeType: S
+      - AttributeName: sk
+        AttributeType: S
+  CompaniesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: company_table
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      KeySchema:
+      - AttributeName: pk
+        KeyType: HASH
+      AttributeDefinitions:
+      - AttributeName: pk
+        AttributeType: S

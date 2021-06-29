@@ -103,7 +103,7 @@ Resources:
           Type: Api
           Properties:
             RestApiId: !Ref MyAPI
-            Path: "/account/{account_id}""
+            Path: "/account/{account_id}"
             Method: PUT
             
   GetIfCompanyIsVerified:
@@ -162,6 +162,7 @@ Resources:
       Handler: bank.getTransactionInformation
       Runtime: python3.6
       CodeUri: package/
+      Role: !GetAtt TransactionsRole.Arn
       Policies: 
         - DynamoDBReadPolicy:
             TableName: !Ref BankTable  
@@ -183,6 +184,7 @@ Resources:
       Handler: bank.putTransactionInformation
       Runtime: python3.6
       CodeUri: package/
+      Role: !GetAtt TransactionsRole.Arn
       Policies: 
         - DynamoDBWritePolicy:
             TableName: !Ref BankTable
@@ -193,6 +195,40 @@ Resources:
             RestApiId: !Ref MyAPI
             Path: "transaction/{transaction-id}"
             Method: PUT
+            
+  # TransactionsRole:
+  #   Type: AWS::IAM::Role
+  #   Properties:
+  #     RoleName: transaction_role
+  #     ManagedPolicyArns: 
+  #       - 'arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess'
+  #       - 'arn:aws:s3:policy/AmazonS3FullAccess'
+  #       - 'arn:aws:iam::aws:policy/AWSOpsWorksCloudWatchLogs'
+  #     AssumeRolePolicyDocument:
+  #       Version: '2012-10-17'
+  #       Statement:
+  #       - Effect: Allow
+  #         Principal:
+  #           Service:
+  #           - lambda.amazonaws.com
+  #         Action:
+  #         - sts:AssumeRole
+  #     Path: "/"
+  #     Policies:
+  #     - PolicyName: lambda-policy
+  #       PolicyDocument:
+  #         Version: '2012-10-17'
+  #         Statement:
+  #         - Effect: Allow
+  #           Action:
+  #           - s3:PutObject
+  #           - s3:GetObject
+  #           - s3:DeleteObject
+  #           Resource: arn:aws:logs:*:*:*
+            
+            
+            
+            
   MyAPI:
     Type: AWS::Serverless::Api
     Properties:
