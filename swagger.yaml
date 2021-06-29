@@ -33,11 +33,11 @@ paths:
                 name:
                   type: string
                 money_amount:
-                  type: string
+                  type: number
                 business_info:
                   type: string
                 monthly_salary:
-                  type: string
+                  type: number
                 daily_transactions:
                   type: number
                   
