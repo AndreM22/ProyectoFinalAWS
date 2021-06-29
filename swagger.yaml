@@ -9,6 +9,11 @@ paths:
           in: path
           required: true
           description: account ID
+        - in: query
+          name: string
+          schema:
+            type: string
+          description: the account ID
       x-amazon-apigateway-integration:
         type: "aws_proxy"
         uri:
@@ -54,7 +59,7 @@ paths:
         - in: query
           name: string
           required: true
-          description: verified company list
+          description: verified company ID
       x-amazon-apigateway-integration:
         type: "aws_proxy"
         uri:
