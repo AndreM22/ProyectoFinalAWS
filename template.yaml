@@ -1,0 +1,182 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 
+  - AWS::Serverless-2016-10-31
+  
+Description: Bank
+Resources: 
+
+  GetAccountInformation:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: getAccountInformation
+      Environment:
+        Variables: 
+          BANK_TABLE: !Ref BankTable
+      Handler: bank.getAccountInformation
+      Runtime: python3.6
+      CodeUri: package/
+      Policies: 
+        - DynamoDBReadPolicy:
+            TableName: !Ref BankTable  
+      Events: 
+        GetAccount: 
+          Type: Api
+          Properties: 
+            RestApiId: !Ref MyAPI
+            Path: "/account/{account_id}"
+            Method: GET
+  
+  PutAccountInformation:
+    Type: AWS::Serverless::Function
+    Properties: 
+      FunctionName: putAccountInformation
+      Environment:
+        Variables:
+          BANK_TABLE: !Ref BankTable
+      Handler: bank.putAccountInformation
+      Runtime: python3.6
+      CodeUri: package/
+      Policies: 
+        - DynamoDBWritePolicy:
+            TableName: !Ref BankTable
+      Events:
+        PutAccount:
+          Type: Api
+          Properties:
+            RestApiId: !Ref MyAPI
+            Path: "/account/{account_id}""
+            Method: PUT
+            
+  GetIfCompanyIsVerified:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: getIfCompanyIsVerified
+      Environment:
+        Variables: 
+          COMPANIES_TABLE: !Ref CompaniesTable
+      Handler: bank.getIfCompanyIsVerified
+      Runtime: python3.6
+      CodeUri: package/
+      Policies: 
+        - DynamoDBReadPolicy:
+            TableName: !Ref CompaniesTable  
+      Events: 
+        GetAccount: 
+          Type: Api
+          Properties: 
+            RestApiId: !Ref MyAPI
+            Path: "/company/{company_id}"
+            Method: GET
+  
+  # PutVerifiedCompany:
+  #   Type: AWS::Serverless::Function
+  #   Properties: 
+  #     FunctionName: putVerifiedCompany
+  #     Environment:
+  #       Variables:
+  #         BANK_TABLE: !Ref BankTable
+  #     Handler: bank.putVerifiedCompany
+  #     Runtime: python3.6
+  #     CodeUri: package/
+  #     Policies: 
+  #       - DynamoDBWritePolicy:
+  #           TableName: !Ref BankTable
+  #     Events:
+  #       PutAccount:
+  #         Type: Api
+  #         Properties:
+  #           RestApiId: !Ref MyAPI
+  #           Path: "/company/{company_id}"
+  #           Method: PUT
+            
+  GetTransactionInformation:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: getTransactionInformation
+      Environment:
+        Variables: 
+          BANK_TABLE: !Ref BankTable
+      Handler: bank.getTransactionInformation
+      Runtime: python3.6
+      CodeUri: package/
+      Policies: 
+        - DynamoDBReadPolicy:
+            TableName: !Ref BankTable  
+      Events: 
+        GetAccount: 
+          Type: Api
+          Properties: 
+            RestApiId: !Ref MyAPI
+            Path: "transaction/{transaction-id}"
+            Method: GET
+  
+  PutTransactionInformation:
+    Type: AWS::Serverless::Function
+    Properties: 
+      FunctionName: putTransactionInformation
+      Environment:
+        Variables:
+          BANK_TABLE: !Ref BankTable
+      Handler: bank.putTransactionInformation
+      Runtime: python3.6
+      CodeUri: package/
+      Policies: 
+        - DynamoDBWritePolicy:
+            TableName: !Ref BankTable
+      Events:
+        PutAccount:
+          Type: Api
+          Properties:
+            RestApiId: !Ref MyAPI
+            Path: "transaction/{transaction-id}"
+            Method: PUT
+  MyAPI:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: my-ultimate-bank-api
+      StageName: prod
+      DefinitionBody:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location: swagger.yaml
+
+  BankTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: bank-table
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+        
+      KeySchema:
+        - AttributeName: "pk"
+          KeyType: HASH
+        - AttributeName: "sk"
+          KeyType: RANGE
+      
+      AttributeDefinitions:
+        - AttributeName:  "pk"
+          AttributeType: S
+        - AttributeName: "sk"
+          AttributeType: S  
+        
+  CompaniesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: companies-table
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+        
+      KeySchema:
+        - AttributeName: "pk"
+          KeyType: HASH
+        - AttributeName: "sk"
+          KeyType: RANGE
+      
+      AttributeDefinitions:
+        - AttributeName:  "pk"
+          AttributeType: S
+        - AttributeName: "sk"
+          AttributeType: S  

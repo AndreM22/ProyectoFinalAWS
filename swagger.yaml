@@ -1,0 +1,132 @@
+openapi: 3.0.0
+# revisar los nombre de funciones en  Fn::Sub
+paths:
+  /account/{account-id}:
+    get:
+      sumarry: Returns the information of an account
+      parameters:
+        - name: account-id
+          in: path
+          required: true
+          description: account ID
+      x-amazon-apigateway-integration:
+        type: "aws_proxy"
+        uri:
+          Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:getAccountInformation/invocations"
+        httpMethod: "POST"
+    put: 
+      summary: This saves an account's information
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                account_id:
+                  type: string
+                name:
+                  type: string
+                money_amount:
+                  type: string
+                business_info:
+                  type: string
+                monthly_salary:
+                  type: string
+      x-amazon-apigateway-integration:
+        type: "aws_proxy"
+        uri:
+          Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:putAccountInformation/invocations"
+        httpMethod: "POST"                  
+                  
+                  
+ 
+
+    
+  /company/{company-id}:
+    get:
+      sumarry: Returns if the name of a company exists in a verified list
+      parameters:
+        - name: company-id
+          in: path
+          required: true
+          description: company ID
+        - in: query
+          name: string
+          required: true
+          description: verified company list
+      x-amazon-apigateway-integration:
+        type: "aws_proxy"
+        uri:
+          Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:getIfCompanyIsVerified/invocations"
+        httpMethod: "POST"
+    # put: 
+    #   sumarry: Creates or updates the name of a company in a list of verified companies
+    #   parameters: 
+    #     - name: company_id
+    #       in: path
+    #       required: true
+    #       description: company information
+    #   requestBody:
+    #     required: true
+    #     content:
+    #       application/json:
+    #         schema:
+    #           type: object
+    #           properties:
+    #             company_id: 
+    #               type: string
+    #             name: 
+    #               type: string
+             
+      x-amazon-apigateway-integration:
+        type: "aws_proxy"
+        uri: 
+          Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:putVerifiedCompany/invocations"
+        httpMethod: "POST"
+        
+        
+  /transaction/{transaction-id}:
+    get:
+      sumarry: Returns the information of a transaction
+      parameters:
+        - name: transaction-id
+          in: path
+          required: true
+          description: transaction 
+        - in: query
+          name: string
+          required: true
+          description: transaction ID
+      x-amazon-apigateway-integration:
+        type: "aws_proxy"
+        uri:
+          Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:getTransactionInformation/invocations"
+        httpMethod: "POST"
+    put: 
+      sumarry: Saves the information of a transaction
+      parameters: 
+        - name: transaction-id
+          in: path
+          required: true
+          description: transaction's information
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                senser: 
+                  type: string
+                receiver: 
+                  type: string
+                amount:
+                  type: number
+                
+             
+      x-amazon-apigateway-integration:
+        type: "aws_proxy"
+        uri: 
+          Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:putTransactionInformation/invocations"
+        httpMethod: "POST"
