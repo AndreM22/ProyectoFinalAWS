@@ -7,36 +7,56 @@ Resources:
   CompaniesBucket:
     Type: AWS::S3::Bucket
     Properties: 
-      BucketName: !Ref 'arn:aws:s3:::my-bucket-proyect-ale'
-      AccessControl: PublicReadWrite
+      BucketName: bucket-de-prueba-2-xd
+
       
   CompaniesBucketPolicy:
-    Type: AWS::S3::BucketPolicy
+    Type: 'AWS::S3::BucketPolicy'
     Properties:
       Bucket: !Ref CompaniesBucket
-      Policies:
-        - PolicyName: LambdaRolePolicy
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-            - Effect: Allow
-              Action:
-              - s3:DeleteObject
-              - s3:GetObject
-              - s3:PutObject
-            Resource: !Join ['', ['arn:aws:s3:::', !Ref CompaniesBucket, /*]]
+      PolicyDocument:
+ #       - PolicyName: LambdaRolePolicy
+        Version: 2012-10-17
+        Statement:
+        - Effect: Allow
+          Action:
+            - 's3:DeleteObject'
+            - 's3:GetObject'
+            - 's3:PutObject'
+          Resource: !Join ['', ['arn:aws:s3:::', !Ref CompaniesBucket, /*]]
+          Principal: '*'
+
       
-      
-  
+  # SampleBucketPolicy:
+  # Type: 'AWS::S3::BucketPolicy'
+  # Properties:
+  #   Bucket: !Ref DOC-EXAMPLE-BUCKET
+  #   PolicyDocument:
+  #     Version: 2012-10-17
+  #     Statement:
+  #       - Action:
+  #           - 's3:GetObject'
+  #         Effect: Allow
+  #         Resource: !Join
+  #           - ''
+  #           - - 'arn:aws:s3:::'
+  #             - !Ref DOC-EXAMPLE-BUCKET
+  #             - /*
+  #         Principal: '*'
+  #         Condition:
+  #           StringLike:
+  #             'aws:Referer':
+  #               - 'http://www.example.com/*'
+  #               - 'http://example.net/*'
   
     
-    CompanyRole:
+  CompanyRole:
     Type: AWS::IAM::Role
     Properties:
       RoleName: companies_role
       ManagedPolicyArns: 
         - 'arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess'
-        - 'arn:aws:s3:policy/AmazonS3FullAccess'
+        - 'arn:aws:iam::aws:policy/AmazonS3FullAccess'
         - 'arn:aws:iam::aws:policy/AWSOpsWorksCloudWatchLogs'
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
@@ -85,14 +105,14 @@ Resources:
             Path: "/account/{account_id}"
             Method: GET
   
-  PutAccountInformation:
+  PutNewAccount:
     Type: AWS::Serverless::Function
     Properties: 
-      FunctionName: putAccountInformation
+      FunctionName: putNewAccount
       Environment:
         Variables:
           BANK_TABLE: !Ref BankTable
-      Handler: bank.putAccountInformation
+      Handler: account.putNewAccount
       Runtime: python3.6
       CodeUri: package/
       Policies: 
@@ -109,12 +129,12 @@ Resources:
   GetIfCompanyIsVerified:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: getIfCompanyIsVerified
+      FunctionName: lambda_handler
       Environment:
         Variables: 
           COMPANIES_TABLE: !Ref CompaniesTable
-          COMPANIES_BUCKET: !Ref my-bucket-proyect-ale
-      Handler: bank.getIfCompanyIsVerified
+          COMPANIES_BUCKET: !Ref CompaniesBucket
+      Handler: verifyCompany.lambda_handler
       Runtime: python3.6
       CodeUri: package/
       
@@ -162,7 +182,7 @@ Resources:
       Handler: bank.getTransactionInformation
       Runtime: python3.6
       CodeUri: package/
-      Role: !GetAtt TransactionsRole.Arn
+ #     Role: !GetAtt TransactionsRole.Arn
       Policies: 
         - DynamoDBReadPolicy:
             TableName: !Ref BankTable  
@@ -184,7 +204,7 @@ Resources:
       Handler: bank.putTransactionInformation
       Runtime: python3.6
       CodeUri: package/
-      Role: !GetAtt TransactionsRole.Arn
+  #    Role: !GetAtt TransactionsRole.Arn
       Policies: 
         - DynamoDBWritePolicy:
             TableName: !Ref BankTable
@@ -276,3 +296,25 @@ Resources:
       AttributeDefinitions:
         - AttributeName:  "pk"
           AttributeType: S
+          
+          
+  # PutNewAccount:
+  #   Type: AWS::Serverless::Function
+  #   Properties:
+  #     FunctionName: putNewAccount
+  #     Environment:
+  #       Variables:
+  #         BANK_TABLE: !Ref BankTable
+  #     Handler: account.putNewAccount
+  #     Runtime: python3.6
+  #     CodeUri: package/
+  #     Policies:
+  #       - DynamoDBWritePolicy:
+  #           TableName: !Ref BankTable
+  #     Events:
+  #       GetUsers:
+  #         Type: Api
+  #         Properties:
+  #           RestApiId: !Ref MyAPI
+  #           Path: "/account/{account_id}"
+  #           Method: PUT

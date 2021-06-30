@@ -1,9 +1,9 @@
 
 #!/bin/bash
-DEPLOYMENT_BUCKET="bank-bucket-client"
+DEPLOYMENT_BUCKET="nuevo-bucket-aws"
 STACK_NAME="bank-stack"
 
-while getopts ":bdp" OPTION; do
+while getopts ":bdpc" OPTION; do
     case $OPTION in
     d)
       DEPLOY=1
@@ -13,6 +13,9 @@ while getopts ":bdp" OPTION; do
       ;;
     b)
       BUILD=1
+      ;;
+    c)
+      DATA_BASE=1
       ;;
     *)
       ;;
@@ -36,4 +39,9 @@ fi
 if [[ $DEPLOY == 1 ]]
 then
     aws cloudformation deploy --template-file packaged-template.json --stack-name $STACK_NAME --capabilities CAPABILITY_NAMED_IAM
+fi
+if [[ $DATA_BASE == 1 ]]
+then
+    $DATA_BASE = 'TableCompany.csv'
+    aws s3 cp TablaEmpresas.csv s3://$DATA_BASE/TableCompany.csv
 fi
