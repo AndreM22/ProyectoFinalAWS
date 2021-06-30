@@ -95,6 +95,6 @@ Si quieres hacer un PUT, copia:
 
 ## Diagrama
 
-<img src="https://imgur.com/CrsbVk7">
+<img src="https://i.imgur.com/b8tzQzC.png?1">
 
 
