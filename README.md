@@ -56,13 +56,21 @@ Si quieres hacer un GET, no necesitas un body.
 
 Si quieres hacer un PUT
 >{
+
     "name":"Hugoberto",
+    
     "company_name": "INDUSTRIAS DE ACEITE SA FINO",
+    
     "company_nit": 4581236,
+    
     "company_type": "Harina de soya y otros",
+    
     "money_amount":10000,
+    
     "monthly_salary":2000,
+    
     "daily_transactions":0
+    
 }
 
 ### Pruebas - Transacciones 
