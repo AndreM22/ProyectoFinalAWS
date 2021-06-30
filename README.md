@@ -1,9 +1,11 @@
 # Proyecto Final AWS - M&T Bank
 
-Alejandra Gabriela Chirinos Valle 51132.
+Miembros:
 
-Fabian Andre Machicao Mercado 51176.
+_Alejandra Gabriela Chirinos Valle - 51132._
 
-Mikaela Maria Cardenas Rodriguez 51108.
+_Fabian Andre Machicao Mercado - 51176._
 
-Miguel Ricardo Tejerina Flores 51239.
+_Mikaela Maria Cardenas Rodriguez - 51108._
+
+_Miguel Ricardo Tejerina Flores - 51239._
