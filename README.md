@@ -36,6 +36,6 @@ Sigue esta serie de pasos para poder tener el código correctamente ejecutados:
 ## Pruebas
 
 ## Diagrama
-<img src="https://drive.google.com/file/d/1fTTTd8kg5AR4LQBwflRNcciQ7srYrCea/view?usp=sharing">
+<img src="https://imgur.com/CrsbVk7">
 
 
