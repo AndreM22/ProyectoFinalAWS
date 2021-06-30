@@ -12,3 +12,10 @@ Miembros:
 - _Mikaela Maria Cardenas Rodriguez - 51108._
 
 - _Miguel Ricardo Tejerina Flores - 51239._
+
+## Comenzando
+
+>* Para poder comenzar necesitas una cuenta en Amazon Web Services.*
+
+1. Crea un ambiente en Cloud9.
+2. Ejecuta el comando "git clone 
