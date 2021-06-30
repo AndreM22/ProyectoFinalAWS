@@ -42,6 +42,6 @@ then
 fi
 if [[ $DATA_BASE == 1 ]]
 then
-    $DATA_BASE = 'TableCompany.csv'
-    aws s3 cp TablaEmpresas.csv s3://$DATA_BASE/TableCompany.csv
+    aws s3 cp TablaEmpresas.csv s3://bucket-prueba-company-1/TableEmpresas.csv
+    # aws s3 cp test.txt s3://mybucket/test2.txt
 fi

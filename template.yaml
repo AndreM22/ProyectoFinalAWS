@@ -15,7 +15,6 @@ Resources:
     Properties:
       Bucket: !Ref CompaniesBucket
       PolicyDocument:
- #       - PolicyName: LambdaRolePolicy
         Version: 2012-10-17
         Statement:
         - Effect: Allow
@@ -26,29 +25,6 @@ Resources:
           Resource: !Join ['', ['arn:aws:s3:::', !Ref CompaniesBucket, /*]]
           Principal: '*'
 
-      
-  # SampleBucketPolicy:
-  # Type: 'AWS::S3::BucketPolicy'
-  # Properties:
-  #   Bucket: !Ref DOC-EXAMPLE-BUCKET
-  #   PolicyDocument:
-  #     Version: 2012-10-17
-  #     Statement:
-  #       - Action:
-  #           - 's3:GetObject'
-  #         Effect: Allow
-  #         Resource: !Join
-  #           - ''
-  #           - - 'arn:aws:s3:::'
-  #             - !Ref DOC-EXAMPLE-BUCKET
-  #             - /*
-  #         Principal: '*'
-  #         Condition:
-  #           StringLike:
-  #             'aws:Referer':
-  #               - 'http://www.example.com/*'
-  #               - 'http://example.net/*'
-  
     
   CompanyRole:
     Type: AWS::IAM::Role
@@ -126,51 +102,6 @@ Resources:
             Path: "/account/{account_id}"
             Method: PUT
             
-  GetIfCompanyIsVerified:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: lambda_handler
-      Environment:
-        Variables: 
-          COMPANIES_TABLE: !Ref CompaniesTable
-          COMPANIES_BUCKET: !Ref CompaniesBucket
-      Handler: verifyCompany.lambda_handler
-      Runtime: python3.6
-      CodeUri: package/
-      
-      Role: !GetAtt CompanyRole.Arn
-      Policies: 
-        - DynamoDBReadPolicy:
-            TableName: !Ref CompaniesTable  
-       
-      Events: 
-        GetAccount: 
-          Type: Api
-          Properties: 
-            RestApiId: !Ref MyAPI
-            Path: "/company/{company_id}"
-            Method: GET
-  
-  # PutVerifiedCompany:
-  #   Type: AWS::Serverless::Function
-  #   Properties: 
-  #     FunctionName: putVerifiedCompany
-  #     Environment:
-  #       Variables:
-  #         BANK_TABLE: !Ref BankTable
-  #     Handler: bank.putVerifiedCompany
-  #     Runtime: python3.6
-  #     CodeUri: package/
-  #     Policies: 
-  #       - DynamoDBWritePolicy:
-  #           TableName: !Ref BankTable
-  #     Events:
-  #       PutAccount:
-  #         Type: Api
-  #         Properties:
-  #           RestApiId: !Ref MyAPI
-  #           Path: "/company/{company_id}"
-  #           Method: PUT
             
   GetTransactionInformation:
     Type: AWS::Serverless::Function
@@ -182,7 +113,6 @@ Resources:
       Handler: bank.getTransactionInformation
       Runtime: python3.6
       CodeUri: package/
- #     Role: !GetAtt TransactionsRole.Arn
       Policies: 
         - DynamoDBReadPolicy:
             TableName: !Ref BankTable  
@@ -201,55 +131,28 @@ Resources:
       Environment:
         Variables:
           BANK_TABLE: !Ref BankTable
+          COMPANIES_TABLE: !Ref CompaniesTable
       Handler: transaction.putTransactionInformation
       Runtime: python3.6
       CodeUri: package/
+      Role: !GetAtt CompanyRole.Arn
   #    Role: !GetAtt TransactionsRole.Arn
       Policies: 
         - DynamoDBWritePolicy:
             TableName: !Ref BankTable
+        - DynamoDBWritePolicy:
+            TableName: !Ref CompaniesTable
+        - DynamoDBReadPolicy:
+            TableName: !Ref BankTable
         - DynamoDBReadPolicy:
             TableName: !Ref CompaniesTable
-            TableName: !Ref BankTable
       Events:
         PutTransactionInformation:
           Type: Api
           Properties:
             RestApiId: !Ref MyAPI
-            Path: "transaction/{transaction-id}"
+            Path: "/transaction/{transaction-id}"
             Method: PUT
-            
-  # TransactionsRole:
-  #   Type: AWS::IAM::Role
-  #   Properties:
-  #     RoleName: transaction_role
-  #     ManagedPolicyArns: 
-  #       - 'arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess'
-  #       - 'arn:aws:s3:policy/AmazonS3FullAccess'
-  #       - 'arn:aws:iam::aws:policy/AWSOpsWorksCloudWatchLogs'
-  #     AssumeRolePolicyDocument:
-  #       Version: '2012-10-17'
-  #       Statement:
-  #       - Effect: Allow
-  #         Principal:
-  #           Service:
-  #           - lambda.amazonaws.com
-  #         Action:
-  #         - sts:AssumeRole
-  #     Path: "/"
-  #     Policies:
-  #     - PolicyName: lambda-policy
-  #       PolicyDocument:
-  #         Version: '2012-10-17'
-  #         Statement:
-  #         - Effect: Allow
-  #           Action:
-  #           - s3:PutObject
-  #           - s3:GetObject
-  #           - s3:DeleteObject
-  #           Resource: arn:aws:logs:*:*:*
-            
-            
             
             
   MyAPI:
@@ -300,28 +203,7 @@ Resources:
       
       AttributeDefinitions:
         - AttributeName: "pk"
-          AttributeType: S
+          AttributeType: N
         - AttributeName: "sk"
           AttributeType: S  
           
-          
-  # PutNewAccount:
-  #   Type: AWS::Serverless::Function
-  #   Properties:
-  #     FunctionName: putNewAccount
-  #     Environment:
-  #       Variables:
-  #         BANK_TABLE: !Ref BankTable
-  #     Handler: account.putNewAccount
-  #     Runtime: python3.6
-  #     CodeUri: package/
-  #     Policies:
-  #       - DynamoDBWritePolicy:
-  #           TableName: !Ref BankTable
-  #     Events:
-  #       GetUsers:
-  #         Type: Api
-  #         Properties:
-  #           RestApiId: !Ref MyAPI
-  #           Path: "/account/{account_id}"
-  #           Method: PUT

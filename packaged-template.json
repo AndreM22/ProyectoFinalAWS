@@ -66,7 +66,7 @@ Resources:
             Ref: BankTable
       Handler: bank.getAccountInformation
       Runtime: python3.6
-      CodeUri: s3://test-bank-project/4655b7cfe4f7d23aaeaf6b36aad6bf19
+      CodeUri: s3://test-bank-project/f8d72b1133a21c504df7b2fbdf7b597d
       Policies:
       - DynamoDBReadPolicy:
           TableName:
@@ -89,7 +89,7 @@ Resources:
             Ref: BankTable
       Handler: account.putNewAccount
       Runtime: python3.6
-      CodeUri: s3://test-bank-project/4655b7cfe4f7d23aaeaf6b36aad6bf19
+      CodeUri: s3://test-bank-project/f8d72b1133a21c504df7b2fbdf7b597d
       Policies:
       - DynamoDBWritePolicy:
           TableName:
@@ -102,35 +102,6 @@ Resources:
               Ref: MyAPI
             Path: /account/{account_id}
             Method: PUT
-  GetIfCompanyIsVerified:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: lambda_handler
-      Environment:
-        Variables:
-          COMPANIES_TABLE:
-            Ref: CompaniesTable
-          COMPANIES_BUCKET:
-            Ref: CompaniesBucket
-      Handler: verifyCompany.lambda_handler
-      Runtime: python3.6
-      CodeUri: s3://test-bank-project/4655b7cfe4f7d23aaeaf6b36aad6bf19
-      Role:
-        Fn::GetAtt:
-        - CompanyRole
-        - Arn
-      Policies:
-      - DynamoDBReadPolicy:
-          TableName:
-            Ref: CompaniesTable
-      Events:
-        GetAccount:
-          Type: Api
-          Properties:
-            RestApiId:
-              Ref: MyAPI
-            Path: /company/{company_id}
-            Method: GET
   GetTransactionInformation:
     Type: AWS::Serverless::Function
     Properties:
@@ -141,7 +112,7 @@ Resources:
             Ref: BankTable
       Handler: bank.getTransactionInformation
       Runtime: python3.6
-      CodeUri: s3://test-bank-project/4655b7cfe4f7d23aaeaf6b36aad6bf19
+      CodeUri: s3://test-bank-project/f8d72b1133a21c504df7b2fbdf7b597d
       Policies:
       - DynamoDBReadPolicy:
           TableName:
@@ -162,23 +133,35 @@ Resources:
         Variables:
           BANK_TABLE:
             Ref: BankTable
+          COMPANIES_TABLE:
+            Ref: CompaniesTable
       Handler: transaction.putTransactionInformation
       Runtime: python3.6
-      CodeUri: s3://test-bank-project/4655b7cfe4f7d23aaeaf6b36aad6bf19
+      CodeUri: s3://test-bank-project/f8d72b1133a21c504df7b2fbdf7b597d
+      Role:
+        Fn::GetAtt:
+        - CompanyRole
+        - Arn
       Policies:
       - DynamoDBWritePolicy:
           TableName:
             Ref: BankTable
+      - DynamoDBWritePolicy:
+          TableName:
+            Ref: CompaniesTable
       - DynamoDBReadPolicy:
           TableName:
             Ref: BankTable
+      - DynamoDBReadPolicy:
+          TableName:
+            Ref: CompaniesTable
       Events:
         PutTransactionInformation:
           Type: Api
           Properties:
             RestApiId:
               Ref: MyAPI
-            Path: transaction/{transaction-id}
+            Path: /transaction/{transaction-id}
             Method: PUT
   MyAPI:
     Type: AWS::Serverless::Api
@@ -189,7 +172,7 @@ Resources:
         Fn::Transform:
           Name: AWS::Include
           Parameters:
-            Location: s3://test-bank-project/1b4ad84e9d26380ba418d906f33de4d9
+            Location: s3://test-bank-project/bfc49b7d8028f35eaf922d2cc669de45
   BankTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -221,6 +204,6 @@ Resources:
         KeyType: RANGE
       AttributeDefinitions:
       - AttributeName: pk
-        AttributeType: S
+        AttributeType: N
       - AttributeName: sk
         AttributeType: S

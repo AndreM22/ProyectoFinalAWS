@@ -47,51 +47,6 @@ paths:
           Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:putNewAccount/invocations"
         httpMethod: "POST"                  
                   
-                  
-
-    
-  /company/{company-id}:
-    get:
-      sumarry: Returns if the name of a company exists in a verified list
-      parameters:
-        - name: company-id
-          in: path
-          required: true
-          description: company ID
-        - in: query
-          name: string
-          required: true
-          description: verified company ID
-      x-amazon-apigateway-integration:
-        type: "aws_proxy"
-        uri:
-          Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:lambda_handler/invocations"
-        httpMethod: "POST"
-    # put: 
-    #   sumarry: Creates or updates the name of a company in a list of verified companies
-    #   parameters: 
-    #     - name: company_id
-    #       in: path
-    #       required: true
-    #       description: company information
-    #   requestBody:
-    #     required: true
-    #     content:
-    #       application/json:
-    #         schema:
-    #           type: object
-    #           properties:
-    #             company_id: 
-    #               type: string
-    #             name: 
-    #               type: string
-             
-      x-amazon-apigateway-integration:
-        type: "aws_proxy"
-        uri: 
-          Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:putVerifiedCompany/invocations"
-        httpMethod: "POST"
-        
         
   /transaction/{transaction-id}:
     get:
