@@ -1,4 +1,5 @@
 # Proyecto Final AWS - M&T Bank
+<img title="AWS" src="https://raw.githubusercontent.com/Thomas-George-T/Thomas-George-T/master/assets/aws.svg" width="60" height="40" />
 
 Miembros:
 
