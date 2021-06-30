@@ -21,6 +21,9 @@ Necesitas una cuenta en Amazon Web Services.
 ```
 Un ambiente en Cloud9 con un ssh key para GitHub
 ```
+```
+Un ambiente en Cloud9 con un ssh key para GitHub
+```
 
 ## Pasos a seguir
 Sigue esta serie de pasos para poder tener el código correctamente ejecutados:
@@ -34,6 +37,35 @@ Sigue esta serie de pasos para poder tener el código correctamente ejecutados:
 7. En la consola ejecuta el comando "./deployment.sh -c".
 
 ## Pruebas
+Sigue los pasos para poder hacer las puebas necesarias:
+
+1. Entra a CloudFormation. 
+2. Ve a la parte de Stacks y entra al último.
+3. Ingresa a la pestaña de "Resources".
+4. Ve hacia abajo en la columna de LogicalID hasta encontrar "MyAPI" e ingresa al link.
+5. Entra a "Stages".
+6. Entra a "prod".
+7. Copia el link de "Invoke URL"
+8. Copia el link anterior en la aplicación "Insomnia".
+
+### Pruebas - Cuentas 
+
+Una vez copiado el link en Insomnia, copiar "/account/account_01" (el "01" depende de la cuenta buscada).
+
+Si quieres hacer un GET, no necesitas un body.
+
+Si quieres hacer un PUT
+>{
+    "name":"Hugoberto",
+    "company_name": "INDUSTRIAS DE ACEITE SA FINO",
+    "company_nit": 4581236,
+    "company_type": "Harina de soya y otros",
+    "money_amount":10000,
+    "monthly_salary":2000,
+    "daily_transactions":0
+}
+
+### Pruebas - Transacciones 
 
 ## Diagrama
 
