@@ -13,9 +13,16 @@ Miembros:
 
 - _Miguel Ricardo Tejerina Flores - 51239._
 
-## Comenzando
+## Pre - requisitos
+Cosas que necesitas para poder ejecutar el código:
+```
+Necesitas una cuenta en Amazon Web Services.
+```
 
->* Para poder comenzar necesitas una cuenta en Amazon Web Services.*
+## Pasos a seguir
 
 1. Crea un ambiente en Cloud9.
-2. Ejecuta el comando "git clone 
+2. Ejecuta el comando "git clone git@github.com:AndreM22/ProyectoFinalAWS.git"
+3. Dentro del archivo template.yaml necesitas cambiar el nombre del bucker (línea 10), el nombre debe ser único.
+4. Dentro del archivo deployment.sh necesitas cambiar el nombre del bucker (línea 3), el nombre debe ser único.
+5. 
