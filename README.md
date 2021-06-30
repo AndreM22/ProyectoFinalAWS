@@ -18,11 +18,16 @@ Cosas que necesitas para poder ejecutar el código:
 ```
 Necesitas una cuenta en Amazon Web Services.
 ```
+```
+Un ambiente en Cloud9 con un ssh key para GitHub
+```
 
 ## Pasos a seguir
 
-1. Crea un ambiente en Cloud9.
-2. Ejecuta el comando "git clone git@github.com:AndreM22/ProyectoFinalAWS.git"
-3. Dentro del archivo template.yaml necesitas cambiar el nombre del bucker (línea 10), el nombre debe ser único.
-4. Dentro del archivo deployment.sh necesitas cambiar el nombre del bucker (línea 3), el nombre debe ser único.
-5. 
+1. En la consola ejecuta el comando "git clone git@github.com:AndreM22/ProyectoFinalAWS.git".
+2. Dentro del archivo template.yaml necesitas cambiar el nombre del bucker (línea 10), el nombre debe ser único.
+3. Dentro del archivo deployment.sh necesitas cambiar el nombre del bucker (línea 3), el nombre debe ser único.
+4. En la consola ejecuta el comando "./deployment.sh -b".
+5. En la consola ejecuta el comando "./deployment.sh -p".
+6. En la consola ejecuta el comando "./deployment.sh -d".
+7. En la consola ejecuta el comando "./deployment.sh -c".
