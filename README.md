@@ -22,7 +22,7 @@ Necesitas una cuenta en Amazon Web Services.
 Un ambiente en Cloud9 con un ssh key para GitHub
 ```
 ```
-Un ambiente en Cloud9 con un ssh key para GitHub
+La aplicación "Insomnia" (Solo si quiere hacer pruebas)
 ```
 
 ## Pasos a seguir
