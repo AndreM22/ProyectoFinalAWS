@@ -22,7 +22,9 @@ def putNewAccount(event, context):
         'sk': "info",
         'name': body["name"],
         'money_amount': body["money_amount"],
-        'business_info': body["business_info"],
+        'company_name': body["company_name"],
+        'company_nit': body["company_nit"],
+        'company_type': body["company_type"],
         'monthly_salary': body["monthly_salary"],
         "daily_transactions":body["daily_transactions"]
     }

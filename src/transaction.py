@@ -4,8 +4,10 @@ import os
 from boto3.dynamodb.conditions import Key, Attr
 
 bank_table = os.environ['BANK_TABLE']
+company_table = os.environ['COMPANIES_TABLE']
 dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table(bank_table)
+table_company = dynamodb.Table()
 records={}
 
 def getTransactionInformation(event, context):
@@ -35,6 +37,9 @@ def putTransactionInformation(event, context):
     receiver = getUser(r)
     condition1 = True;
     condition3 = True;
+    
+    getCompany(sender)
+        
     if ammount > 20000 :
         condition1 = cond1(sender)
     condition2 = cond2(receiver)
@@ -107,3 +112,14 @@ def cond2(user):
     return not user["daily_transactions"] == 5
 def cond3(user, ammount):
     return user["money_amount"]-ammount > 100
+    
+def getCompany(user):
+    company_name = user["company_name"]
+    company_nit = user["nit"]
+    company_type = user["company_type"]
+    response = table_company.scan(
+        FilterExpression=Attr('name').eq(company_name) & Attr("nit").eq(company_nit) & Attr("type").eq(company_type)
+    )
+    items = response['Items']
+    print(items)
+    

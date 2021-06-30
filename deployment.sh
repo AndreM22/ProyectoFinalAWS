@@ -1,7 +1,7 @@
 
 #!/bin/bash
-DEPLOYMENT_BUCKET="nuevo-bucket-aws"
-STACK_NAME="bank-stack"
+DEPLOYMENT_BUCKET="test-bank-project"
+STACK_NAME="bank-stack-test"
 
 while getopts ":bdpc" OPTION; do
     case $OPTION in

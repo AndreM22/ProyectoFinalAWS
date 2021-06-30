@@ -6,7 +6,7 @@ Resources:
   CompaniesBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: bucket-de-prueba-2-xd
+      BucketName: bucket-prueba-company-1
   CompaniesBucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
@@ -66,7 +66,7 @@ Resources:
             Ref: BankTable
       Handler: bank.getAccountInformation
       Runtime: python3.6
-      CodeUri: s3://nuevo-bucket-aws/70c890912e11160cba85a7fd81b33b7c
+      CodeUri: s3://test-bank-project/4655b7cfe4f7d23aaeaf6b36aad6bf19
       Policies:
       - DynamoDBReadPolicy:
           TableName:
@@ -89,7 +89,7 @@ Resources:
             Ref: BankTable
       Handler: account.putNewAccount
       Runtime: python3.6
-      CodeUri: s3://nuevo-bucket-aws/70c890912e11160cba85a7fd81b33b7c
+      CodeUri: s3://test-bank-project/4655b7cfe4f7d23aaeaf6b36aad6bf19
       Policies:
       - DynamoDBWritePolicy:
           TableName:
@@ -114,7 +114,7 @@ Resources:
             Ref: CompaniesBucket
       Handler: verifyCompany.lambda_handler
       Runtime: python3.6
-      CodeUri: s3://nuevo-bucket-aws/70c890912e11160cba85a7fd81b33b7c
+      CodeUri: s3://test-bank-project/4655b7cfe4f7d23aaeaf6b36aad6bf19
       Role:
         Fn::GetAtt:
         - CompanyRole
@@ -141,7 +141,7 @@ Resources:
             Ref: BankTable
       Handler: bank.getTransactionInformation
       Runtime: python3.6
-      CodeUri: s3://nuevo-bucket-aws/70c890912e11160cba85a7fd81b33b7c
+      CodeUri: s3://test-bank-project/4655b7cfe4f7d23aaeaf6b36aad6bf19
       Policies:
       - DynamoDBReadPolicy:
           TableName:
@@ -162,15 +162,18 @@ Resources:
         Variables:
           BANK_TABLE:
             Ref: BankTable
-      Handler: bank.putTransactionInformation
+      Handler: transaction.putTransactionInformation
       Runtime: python3.6
-      CodeUri: s3://nuevo-bucket-aws/70c890912e11160cba85a7fd81b33b7c
+      CodeUri: s3://test-bank-project/4655b7cfe4f7d23aaeaf6b36aad6bf19
       Policies:
       - DynamoDBWritePolicy:
           TableName:
             Ref: BankTable
+      - DynamoDBReadPolicy:
+          TableName:
+            Ref: BankTable
       Events:
-        PutAccount:
+        PutTransactionInformation:
           Type: Api
           Properties:
             RestApiId:
@@ -186,7 +189,7 @@ Resources:
         Fn::Transform:
           Name: AWS::Include
           Parameters:
-            Location: s3://nuevo-bucket-aws/1b4ad84e9d26380ba418d906f33de4d9
+            Location: s3://test-bank-project/1b4ad84e9d26380ba418d906f33de4d9
   BankTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -214,6 +217,10 @@ Resources:
       KeySchema:
       - AttributeName: pk
         KeyType: HASH
+      - AttributeName: sk
+        KeyType: RANGE
       AttributeDefinitions:
       - AttributeName: pk
+        AttributeType: S
+      - AttributeName: sk
         AttributeType: S

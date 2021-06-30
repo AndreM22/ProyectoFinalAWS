@@ -7,7 +7,7 @@ Resources:
   CompaniesBucket:
     Type: AWS::S3::Bucket
     Properties: 
-      BucketName: bucket-de-prueba-2-xd
+      BucketName: bucket-prueba-company-1
 
       
   CompaniesBucketPolicy:
@@ -201,15 +201,18 @@ Resources:
       Environment:
         Variables:
           BANK_TABLE: !Ref BankTable
-      Handler: bank.putTransactionInformation
+      Handler: transaction.putTransactionInformation
       Runtime: python3.6
       CodeUri: package/
   #    Role: !GetAtt TransactionsRole.Arn
       Policies: 
         - DynamoDBWritePolicy:
             TableName: !Ref BankTable
+        - DynamoDBReadPolicy:
+            TableName: !Ref CompaniesTable
+            TableName: !Ref BankTable
       Events:
-        PutAccount:
+        PutTransactionInformation:
           Type: Api
           Properties:
             RestApiId: !Ref MyAPI
@@ -291,11 +294,15 @@ Resources:
       KeySchema:
         - AttributeName: "pk"
           KeyType: HASH
+        - AttributeName: "sk"
+          KeyType: RANGE
 
       
       AttributeDefinitions:
-        - AttributeName:  "pk"
+        - AttributeName: "pk"
           AttributeType: S
+        - AttributeName: "sk"
+          AttributeType: S  
           
           
   # PutNewAccount:
