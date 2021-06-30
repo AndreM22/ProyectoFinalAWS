@@ -55,10 +55,9 @@ Una vez copiado el link en Insomnia, copiar "/account/account_01" (el "01" depen
 Si quieres hacer un GET, no necesitas un body.
 
 Si quieres hacer un PUT, copia:
+
 >
-  {
-    {
-    
+{
     "name":"Hugoberto",
     
     "company_name": "INDUSTRIAS DE ACEITE SA FINO",
@@ -72,7 +71,7 @@ Si quieres hacer un PUT, copia:
     "monthly_salary":2000,
     
     "daily_transactions":0
-    }
+   
   }
 
 ### Pruebas - Transacciones 
