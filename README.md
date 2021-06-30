@@ -23,6 +23,7 @@ Un ambiente en Cloud9 con un ssh key para GitHub
 ```
 
 ## Pasos a seguir
+Sigue esta serie de pasos para poder tener el código correctamente ejecutados:
 
 1. En la consola ejecuta el comando "git clone git@github.com:AndreM22/ProyectoFinalAWS.git".
 2. Dentro del archivo template.yaml necesitas cambiar el nombre del bucker (línea 10), el nombre debe ser único.
@@ -31,3 +32,10 @@ Un ambiente en Cloud9 con un ssh key para GitHub
 5. En la consola ejecuta el comando "./deployment.sh -p".
 6. En la consola ejecuta el comando "./deployment.sh -d".
 7. En la consola ejecuta el comando "./deployment.sh -c".
+
+## Pruebas
+
+## Diagrama
+<img src="https://drive.google.com/file/d/1fTTTd8kg5AR4LQBwflRNcciQ7srYrCea/view?usp=sharing" alt="Banner about Arturs Smirnovs">
+
+
