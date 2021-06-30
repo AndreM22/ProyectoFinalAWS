@@ -77,6 +77,22 @@ Si quieres hacer un PUT, copia:
 
 ### Pruebas - Transacciones 
 
+Una vez copiado el link en Insomnia, copiar "/transaction/transaction_01" (el "01" depende de la transacción buscada).
+
+Si quieres hacer un GET, no necesitas un body.
+
+Si quieres hacer un PUT, copia:
+>
+{
+
+    "sender": "account_01",
+    
+    "receiver": "account_02",
+    
+    "ammount": 400
+    
+}
+
 ## Diagrama
 
 <img src="https://imgur.com/CrsbVk7">
