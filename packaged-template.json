@@ -66,7 +66,7 @@ Resources:
             Ref: BankTable
       Handler: bank.getAccountInformation
       Runtime: python3.6
-      CodeUri: s3://test-bank-project/f8d72b1133a21c504df7b2fbdf7b597d
+      CodeUri: s3://test-bank-project/080ab524db63fa63dd1a1f739c7e8705
       Policies:
       - DynamoDBReadPolicy:
           TableName:
@@ -89,7 +89,7 @@ Resources:
             Ref: BankTable
       Handler: account.putNewAccount
       Runtime: python3.6
-      CodeUri: s3://test-bank-project/f8d72b1133a21c504df7b2fbdf7b597d
+      CodeUri: s3://test-bank-project/080ab524db63fa63dd1a1f739c7e8705
       Policies:
       - DynamoDBWritePolicy:
           TableName:
@@ -112,7 +112,7 @@ Resources:
             Ref: BankTable
       Handler: bank.getTransactionInformation
       Runtime: python3.6
-      CodeUri: s3://test-bank-project/f8d72b1133a21c504df7b2fbdf7b597d
+      CodeUri: s3://test-bank-project/080ab524db63fa63dd1a1f739c7e8705
       Policies:
       - DynamoDBReadPolicy:
           TableName:
@@ -137,7 +137,7 @@ Resources:
             Ref: CompaniesTable
       Handler: transaction.putTransactionInformation
       Runtime: python3.6
-      CodeUri: s3://test-bank-project/f8d72b1133a21c504df7b2fbdf7b597d
+      CodeUri: s3://test-bank-project/080ab524db63fa63dd1a1f739c7e8705
       Role:
         Fn::GetAtt:
         - CompanyRole

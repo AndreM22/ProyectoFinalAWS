@@ -82,26 +82,26 @@ def putTransactionInformation(event, context):
                     'ammount': ammount
                 }
             )
-            updateUser(s, -ammount, sender)
-            updateUser(r, ammount, receiver)
+            updateUser(s, -ammount, sender, 0)
+            updateUser(r, ammount, receiver, 1)
         return{
             'statusCode': 200,
-            'body': json.dumps('Transaction completed!')
+            'body': json.dumps('Transaction completed!, go check it out')
         }
-    elif condition1 and condition2 and (not condition3): 
+    elif not condition1:
         return{
                 'statusCode': 200,
-                'body': json.dumps("Transaction rejected.\\n Motive: Less than 100$ in sender account if the transaction is made.")
+                'body': json.dumps("Transaction rejected.\\n Motive: Suspicious transaction")
             }
-    elif condition1 and condition3 and (not condition2):
+    elif not condition2:
         return{
                 'statusCode': 200,
                 'body': json.dumps("Transaction rejected.\\n Motive: The receiver account can't receive more transactions for today")
             }
-    elif condition2 and condition3 and (not condition1):
+    elif not condition3: 
         return{
                 'statusCode': 200,
-                'body': json.dumps("Transaction rejected.\\n Motive: Suspicious transaction")
+                'body': json.dumps("Transaction rejected.\\n Motive: Less than 100$ in sender account if the transaction is made.")
             }
     
 def getUser(user_id):
@@ -114,7 +114,7 @@ def getUser(user_id):
     item = response['Item']
     return item
     
-def updateUser(user_id, ammount, user):
+def updateUser(user_id, ammount, user, transaction):
     print(user)
     table.update_item(
     Key={
@@ -124,7 +124,7 @@ def updateUser(user_id, ammount, user):
     UpdateExpression='SET money_amount = :val1, daily_transactions = :val2',
     ExpressionAttributeValues={
         ':val1': int(user["money_amount"] + ammount),
-        ':val2': int(user["daily_transactions"] + 1)
+        ':val2': int(user["daily_transactions"] + transaction)
     }
 )
 
@@ -150,7 +150,10 @@ def getCompany(user):
     response = table_company.scan(
         FilterExpression=Attr('name').eq(company_name) & Attr("nit").eq(company_nit) & Attr("type").eq(company_type)
     )
-    return (response['Items'][0])
+    if(len(response['Items'])):
+        return response['Items'][0]
+    else:
+        return (response['Items'])
     
         
         
