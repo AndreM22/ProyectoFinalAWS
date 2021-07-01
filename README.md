@@ -22,15 +22,15 @@ Necesitas una cuenta en Amazon Web Services.
 Un ambiente en Cloud9 con un ssh key para GitHub
 ```
 ```
-Un ambiente en Cloud9 con un ssh key para GitHub
+La aplicación "Insomnia" (Solo si quiere hacer pruebas)
 ```
 
 ## Pasos a seguir
 Sigue esta serie de pasos para poder tener el código correctamente ejecutados:
 
 1. En la consola ejecuta el comando "git clone git@github.com:AndreM22/ProyectoFinalAWS.git".
-2. Dentro del archivo template.yaml necesitas cambiar el nombre del bucker (línea 10), el nombre debe ser único.
-3. Dentro del archivo deployment.sh necesitas cambiar el nombre del bucker (línea 3), el nombre debe ser único.
+2. Dentro del archivo template.yaml necesitas cambiar el nombre del bucket (línea 10), el nombre debe ser único.
+3. Dentro del archivo deployment.sh necesitas cambiar el nombre del bucket (línea 3), el nombre debe ser único.
 4. En la consola ejecuta el comando "./deployment.sh -b".
 5. En la consola ejecuta el comando "./deployment.sh -p".
 6. En la consola ejecuta el comando "./deployment.sh -d".
@@ -77,8 +77,24 @@ Si quieres hacer un PUT, copia:
 
 ### Pruebas - Transacciones 
 
+Una vez copiado el link en Insomnia, copiar "/transaction/transaction_01" (el "01" depende de la transacción buscada).
+
+Si quieres hacer un GET, no necesitas un body.
+
+Si quieres hacer un PUT, copia:
+>
+{
+
+    "sender": "account_01",
+    
+    "receiver": "account_02",
+    
+    "ammount": 400
+    
+}
+
 ## Diagrama
 
-<img src="https://imgur.com/CrsbVk7">
+<img src="https://i.imgur.com/b8tzQzC.png?1">
 
 
