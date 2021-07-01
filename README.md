@@ -29,8 +29,8 @@ La aplicación "Insomnia" (Solo si quiere hacer pruebas)
 Sigue esta serie de pasos para poder tener el código correctamente ejecutados:
 
 1. En la consola ejecuta el comando "git clone git@github.com:AndreM22/ProyectoFinalAWS.git".
-2. Dentro del archivo template.yaml necesitas cambiar el nombre del bucker (línea 10), el nombre debe ser único.
-3. Dentro del archivo deployment.sh necesitas cambiar el nombre del bucker (línea 3), el nombre debe ser único.
+2. Dentro del archivo template.yaml necesitas cambiar el nombre del bucket (línea 10), el nombre debe ser único.
+3. Dentro del archivo deployment.sh necesitas cambiar el nombre del bucket (línea 3), el nombre debe ser único.
 4. En la consola ejecuta el comando "./deployment.sh -b".
 5. En la consola ejecuta el comando "./deployment.sh -p".
 6. En la consola ejecuta el comando "./deployment.sh -d".
